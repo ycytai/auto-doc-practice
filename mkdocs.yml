@@ -1,0 +1,10 @@
+site_name: Doc Demo
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings
+
+nav:
+  - How to use: how-to-guides.md
