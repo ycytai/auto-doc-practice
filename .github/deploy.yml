@@ -34,6 +34,6 @@ jobs:
         script: |
           cd /code/auto-doc-practice
           git pull origin main
-	        poetry shell
+          poetry shell
           mkdocs build
           cp -r site /web
