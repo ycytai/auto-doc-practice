@@ -18,22 +18,20 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install MkDocs
-      run: pip install mkdocs
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 - --version 1.3.2
+        poetry config virtualenvs.create true
+        poetry config virtualenvs.in-project true
+        export PATH="$HOME/.local/bin:$PATH"
+
+    - name: Install dependencies
+      run: poetry install --no-root
 
     - name: Build MkDocs site
-      run: mkdocs build
+      run: poetry run mkdocs build
 
-    - name: Deploy to Linode
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.LINODE_IP }}
-        username: gh_action
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        passphrase: ''
-        script: |
-          cd /code/auto-doc-practice
-          git pull origin main
-          poetry shell
-          mkdocs build
-          cp -r site /web
+    - name: Copy site to server using SCP
+      run: |
+        scp -r site gh_action@${{ secrets.LINODE_IP }}:/web/
+      shell: bash
