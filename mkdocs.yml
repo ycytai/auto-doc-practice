@@ -8,3 +8,4 @@ plugins:
 
 nav:
   - How to use: how-to-guides.md
+  - New page: new-page.md
