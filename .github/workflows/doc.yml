@@ -2,8 +2,8 @@ name: Deploy Documentation
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
 
 jobs:
   deploy:
@@ -30,6 +30,13 @@ jobs:
 
     - name: Build MkDocs site
       run: poetry run mkdocs build
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.LINODE_IP }} >> ~/.ssh/known_hosts
 
     - name: Copy site to server using SCP
       run: |
